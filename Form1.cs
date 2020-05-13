@@ -53,6 +53,15 @@ namespace AnimeLoupe2x
             }
         }
 
+        public struct TempFileInfo
+        {
+            public string baseTempPath;
+            public string imageTempPath;
+            public string convertTempPath;
+            public string audioTempPath;
+            public string videoTempPath;
+        }
+
         private void RunButton_Click(object sender, EventArgs e)
         {
 			myEvent = new MyEventHandler(event_DataReceived);
@@ -105,19 +114,8 @@ namespace AnimeLoupe2x
             string inputFilePath = inputPath.Text;
 			string outputFilePath = outputPath.Text;
 
-            string baseTempPath = Directory.GetCurrentDirectory() + @"\temp\";
-            string imageTempPath = baseTempPath+@"image\";
-            string audioTempPath = baseTempPath+@"audio\";
-            string videoTempPath = baseTempPath+@"video\";
-
-            if (Directory.Exists(baseTempPath) == false)
-            {
-                Directory.CreateDirectory(baseTempPath);
-                Directory.CreateDirectory(imageTempPath);
-                Directory.CreateDirectory(audioTempPath);
-                Directory.CreateDirectory(videoTempPath);
-            }
-
+            TempFileInfo temp_file_info = new TempFileInfo();
+            MakeTempDir(ref temp_file_info);
 
             Command meirei;
 
@@ -127,12 +125,12 @@ namespace AnimeLoupe2x
 
             if (V2ICheckBox.Checked)
 			{
-				meirei = MakeVideo2ImageString(inputFilePath, imageTempPath+ "image_%08d.png");
+				meirei = MakeVideo2ImageString(inputFilePath, temp_file_info.imageTempPath + "image_%08d.png");
 				ExecFFmpegCommand(meirei);
 			}
 			if (V2ACheckBox.Checked)
 			{
-				meirei = MakeSepAudioString(inputFilePath, audioTempPath + "audio1.aac");
+				meirei = MakeSepAudioString(inputFilePath, temp_file_info.audioTempPath + "audio1.aac");
 				ExecFFmpegCommand(meirei);
 			}
 			if (Waifu2xCheckBox.Checked)
@@ -141,12 +139,12 @@ namespace AnimeLoupe2x
 			}
 			if (I2VCheckBox.Checked)
 			{
-				meirei = MakeImage2VideoString(imageTempPath+ "image_%08d.png", videoTempPath+ "video_output.avi", video_info);
+				meirei = MakeImage2VideoString(temp_file_info.imageTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.avi", video_info);
 				ExecFFmpegCommand(meirei);
 			}
 			if (AddAudioCheckBox.Checked)
 			{
-				meirei = MakeComAudioString(videoTempPath + "video_output.avi", audioTempPath + "audio1.aac", outputFilePath);
+				meirei = MakeComAudioString(temp_file_info.videoTempPath + "video_output.avi", temp_file_info.audioTempPath + "audio1.aac", outputFilePath);
 				ExecFFmpegCommand(meirei);
 			}
 
@@ -259,8 +257,26 @@ namespace AnimeLoupe2x
             return 0;
         }
 
+        void MakeTempDir(ref TempFileInfo tfi)
+        {
+            tfi.baseTempPath = Directory.GetCurrentDirectory() + @"\temp\";
+            tfi.imageTempPath = tfi.baseTempPath + @"image\";
+            tfi.convertTempPath = tfi.baseTempPath + @"convert\";
+            tfi.audioTempPath = tfi.baseTempPath + @"audio\";
+            tfi.videoTempPath = tfi.baseTempPath + @"video\";
 
-		int ExecWaifu2xCommand()
+            if (Directory.Exists(tfi.baseTempPath) == false)
+            {
+                Directory.CreateDirectory(tfi.baseTempPath);
+                Directory.CreateDirectory(tfi.imageTempPath);
+                Directory.CreateDirectory(tfi.convertTempPath);
+                Directory.CreateDirectory(tfi.audioTempPath);
+                Directory.CreateDirectory(tfi.videoTempPath);
+            }
+
+        }
+
+        int ExecWaifu2xCommand()
 		{
 			
 // List<string> str
