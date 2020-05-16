@@ -135,7 +135,7 @@ namespace AnimeLoupe2x
 			}
 			if (Waifu2xCheckBox.Checked)
 			{
-				meirei = MakeWaifu2xString();
+				meirei = MakeWaifu2xString(temp_file_info.imageTempPath + "image_%08d.png", temp_file_info.convertTempPath + "image_%08d.png");
 			}
 			if (I2VCheckBox.Checked)
 			{
@@ -186,7 +186,7 @@ namespace AnimeLoupe2x
 			return ret_val;
 		}
 
-		Command MakeWaifu2xString()
+		Command MakeWaifu2xString(string inputFile, string outputFile)
 		{
 			Command ret_val = new Command();
 			ret_val.command = Waifu2xPath + "waifu2x-caffe-cui.exe";
