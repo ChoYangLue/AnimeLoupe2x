@@ -62,6 +62,17 @@ namespace AnimeLoupe2x
             public string videoTempPath;
         }
 
+        public struct Waifu2xInfo
+        {
+            public float scale;
+            public string mode;
+            public string process;
+            public int noise_level;
+            public string y;
+        }
+
+        public bool CancelFlag;
+
         private void RunButton_Click(object sender, EventArgs e)
         {
 			myEvent = new MyEventHandler(event_DataReceived);
@@ -96,8 +107,9 @@ namespace AnimeLoupe2x
 		{
 			// 現在のマネージドスレッドの識別子を表示
 			Console.WriteLine("スレッドID] => {0}", Thread.CurrentThread.ManagedThreadId);
+            CancelFlag = false;
 
-			if (inputPath == null)
+            if (inputPath == null)
 			{
 				Console.WriteLine("file input is none.");
 				return;
@@ -135,8 +147,39 @@ namespace AnimeLoupe2x
 			}
 			if (Waifu2xCheckBox.Checked)
 			{
-				meirei = MakeWaifu2xString(temp_file_info.imageTempPath + "image_%08d.png", temp_file_info.convertTempPath + "image_%08d.png");
-			}
+                Waifu2xInfo w_info = new Waifu2xInfo();
+                w_info.mode = "noise_scale";
+                w_info.process = "cudnn";
+                w_info.scale = 1.5f;
+                w_info.noise_level = 1;
+                w_info.y = "upconv_7_anime_style_art_rgb";
+                
+                var delta_list = new List<string>();
+                string[] pre_temp_files = Directory.GetFiles(temp_file_info.imageTempPath, "*.png");
+                this.Invoke(myEvent, "init files");
+                foreach (string name in pre_temp_files)
+                {
+                    delta_list.Add(System.IO.Path.GetFileName(name));
+                }
+
+                string[] conv_temp_files = Directory.GetFiles(temp_file_info.convertTempPath, "*.png");
+                foreach (string name in conv_temp_files)
+                {
+                    delta_list.Remove(System.IO.Path.GetFileName(name));
+                    //Console.WriteLine(System.IO.Path.GetFileName(name));
+                }
+
+                int temp_file_count = 0;
+                foreach (string fullpath in delta_list)
+                {
+                    if (CancelFlag) return;
+                    meirei = MakeWaifu2xString(temp_file_info.imageTempPath + fullpath, temp_file_info.convertTempPath + fullpath, w_info);
+                    ExecFFmpegCommand(meirei);
+                    this.Invoke(myEvent, "converted: "+ fullpath +" ("+ temp_file_count.ToString()+"/" +delta_list.Count.ToString()+")" );
+                    temp_file_count += 1;
+                }
+
+            }
 			if (I2VCheckBox.Checked)
 			{
 				meirei = MakeImage2VideoString(temp_file_info.imageTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.avi", video_info);
@@ -186,11 +229,11 @@ namespace AnimeLoupe2x
 			return ret_val;
 		}
 
-		Command MakeWaifu2xString(string inputFile, string outputFile)
+		Command MakeWaifu2xString(string inputFile, string outputFile, Waifu2xInfo info)
 		{
 			Command ret_val = new Command();
 			ret_val.command = Waifu2xPath + "waifu2x-caffe-cui.exe";
-			ret_val.option = @"-i F:\Program\C#\AnimeLoupe2x\temp\image_%08d.png -vcodec mjpeg -q 0 F:\Program\C#\AnimeLoupe2x\temp\video_output.avi";
+			ret_val.option = "-i "+ inputFile + @" -o "+ outputFile+ " -m "+info.mode+" -s "+info.scale.ToString("0.00") + " -n "+info.noise_level.ToString()+" -p "+info.process+ " -y "+info.y;
 			return ret_val;
 		}
 
@@ -370,6 +413,12 @@ for (int i = 0; i < 1; i++)
                 Console.WriteLine(ofd.FileName);
                 inputPath.Text = ofd.FileName;
             }
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            CancelFlag = true;
+            this.Invoke(myEvent, "command is canceled!");
         }
     }
 }
