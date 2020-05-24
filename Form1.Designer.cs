@@ -46,9 +46,9 @@
             this.inputPath = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.ClearTempButton = new System.Windows.Forms.Button();
             this.TempFilePathGroup = new System.Windows.Forms.GroupBox();
             this.TempFilePathText = new System.Windows.Forms.TextBox();
-            this.ClearTempButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -68,14 +68,14 @@
             this.LogText.Multiline = true;
             this.LogText.Name = "LogText";
             this.LogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.LogText.Size = new System.Drawing.Size(1163, 398);
+            this.LogText.Size = new System.Drawing.Size(1389, 505);
             this.LogText.TabIndex = 0;
             // 
             // RunButton
             // 
             this.RunButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RunButton.Font = new System.Drawing.Font("MS UI Gothic", 12F);
-            this.RunButton.Location = new System.Drawing.Point(1078, 234);
+            this.RunButton.Location = new System.Drawing.Point(1304, 234);
             this.RunButton.Name = "RunButton";
             this.RunButton.Size = new System.Drawing.Size(73, 80);
             this.RunButton.TabIndex = 1;
@@ -93,7 +93,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1072, 312);
+            this.tabControl1.Size = new System.Drawing.Size(1298, 312);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -105,7 +105,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 28);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1064, 280);
+            this.tabPage1.Size = new System.Drawing.Size(1290, 280);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "command setting";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -234,7 +234,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 28);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1064, 280);
+            this.tabPage2.Size = new System.Drawing.Size(1290, 280);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "waifu2x setting";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -245,10 +245,20 @@
             this.tabPage3.Controls.Add(this.TempFilePathGroup);
             this.tabPage3.Location = new System.Drawing.Point(4, 28);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1064, 280);
+            this.tabPage3.Size = new System.Drawing.Size(1290, 280);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "temp setting";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // ClearTempButton
+            // 
+            this.ClearTempButton.Location = new System.Drawing.Point(576, 58);
+            this.ClearTempButton.Name = "ClearTempButton";
+            this.ClearTempButton.Size = new System.Drawing.Size(159, 25);
+            this.ClearTempButton.TabIndex = 1;
+            this.ClearTempButton.Text = "Clear Temp File";
+            this.ClearTempButton.UseVisualStyleBackColor = true;
+            this.ClearTempButton.Click += new System.EventHandler(this.ClearTempButton_Click);
             // 
             // TempFilePathGroup
             // 
@@ -267,23 +277,14 @@
             this.TempFilePathText.Size = new System.Drawing.Size(446, 25);
             this.TempFilePathText.TabIndex = 0;
             // 
-            // ClearTempButton
-            // 
-            this.ClearTempButton.Location = new System.Drawing.Point(576, 58);
-            this.ClearTempButton.Name = "ClearTempButton";
-            this.ClearTempButton.Size = new System.Drawing.Size(159, 25);
-            this.ClearTempButton.TabIndex = 1;
-            this.ClearTempButton.Text = "Clear Temp File";
-            this.ClearTempButton.UseVisualStyleBackColor = true;
-            // 
             // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(1078, 148);
+            this.CancelButton.Location = new System.Drawing.Point(1304, 148);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(73, 80);
             this.CancelButton.TabIndex = 4;
-            this.CancelButton.Text = "Cancel";
+            this.CancelButton.Text = "Stop";
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
@@ -291,7 +292,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1163, 719);
+            this.ClientSize = new System.Drawing.Size(1389, 826);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.RunButton);

@@ -182,7 +182,7 @@ namespace AnimeLoupe2x
             }
 			if (I2VCheckBox.Checked)
 			{
-				meirei = MakeImage2VideoString(temp_file_info.imageTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.avi", video_info);
+				meirei = MakeImage2VideoString(temp_file_info.convertTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.avi", video_info);
 				ExecFFmpegCommand(meirei);
 			}
 			if (AddAudioCheckBox.Checked)
@@ -319,6 +319,32 @@ namespace AnimeLoupe2x
 
         }
 
+        public static void DeleteTempDir(string targetDirectoryPath)
+        {
+            if (!Directory.Exists(targetDirectoryPath))
+            {
+                return;
+            }
+
+            //ディレクトリ以外の全ファイルを削除
+            string[] filePaths = Directory.GetFiles(targetDirectoryPath);
+            foreach (string filePath in filePaths)
+            {
+                File.SetAttributes(filePath, FileAttributes.Normal);
+                File.Delete(filePath);
+            }
+
+            //ディレクトリの中のディレクトリも再帰的に削除
+            string[] directoryPaths = Directory.GetDirectories(targetDirectoryPath);
+            foreach (string directoryPath in directoryPaths)
+            {
+                DeleteTempDir(directoryPath);
+            }
+
+            //中が空になったらディレクトリ自身も削除
+            Directory.Delete(targetDirectoryPath, false);
+        }
+
         int ExecWaifu2xCommand()
 		{
 			
@@ -419,6 +445,11 @@ for (int i = 0; i < 1; i++)
         {
             CancelFlag = true;
             this.Invoke(myEvent, "command is canceled!");
+        }
+
+        private void ClearTempButton_Click(object sender, EventArgs e)
+        {
+            DeleteTempDir(Directory.GetCurrentDirectory() + @"\temp");
         }
     }
 }
