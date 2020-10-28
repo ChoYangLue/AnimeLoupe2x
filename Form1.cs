@@ -39,6 +39,7 @@ namespace AnimeLoupe2x
         }
         string FFmpegPath = Directory.GetCurrentDirectory()+@"\Lib\ffmpeg\";
         string Waifu2xPath = Directory.GetCurrentDirectory() + @"\Lib\waifu2x-caffe\";
+        string Anime4KPath = Directory.GetCurrentDirectory() + @"\Lib\Anime4KCPP_CLI\";
 
         public struct VideoInfo
         {
@@ -62,7 +63,7 @@ namespace AnimeLoupe2x
             public string videoTempPath;
         }
 
-        public struct Waifu2xInfo
+        public struct ConvertInfo
         {
             public float scale;
             public string mode;
@@ -142,18 +143,11 @@ namespace AnimeLoupe2x
 			}
 			if (V2ACheckBox.Checked)
 			{
-				meirei = MakeSepAudioString(inputFilePath, temp_file_info.audioTempPath + "audio1.aac");
+				meirei = MakeSepAudioString(inputFilePath, temp_file_info.audioTempPath + "audio1.wav");
 				ExecFFmpegCommand(meirei);
 			}
 			if (Waifu2xCheckBox.Checked)
 			{
-                Waifu2xInfo w_info = new Waifu2xInfo();
-                w_info.mode = "noise_scale";
-                w_info.process = "cudnn";
-                w_info.scale = 1.5f;
-                w_info.noise_level = 1;
-                w_info.y = "upconv_7_anime_style_art_rgb";
-                
                 var delta_list = new List<string>();
                 string[] pre_temp_files = Directory.GetFiles(temp_file_info.imageTempPath, "*.png");
                 this.Invoke(myEvent, "init files");
@@ -168,38 +162,55 @@ namespace AnimeLoupe2x
                     delta_list.Remove(System.IO.Path.GetFileName(name));
                     //Console.WriteLine(System.IO.Path.GetFileName(name));
                 }
+                this.Invoke(myEvent, "convert file count="+delta_list.Count().ToString() );
 
+                ConvertInfo c_info = new ConvertInfo();
+                c_info.mode = "noise_scale";
+                c_info.process = "cudnn";
+                c_info.scale = 1.5f;
+                if (SizeRateTextBox.Text != "") c_info.scale = float.Parse(SizeRateTextBox.Text);
+                c_info.noise_level = 2;
+                c_info.y = "upconv_7_anime_style_art_rgb";
+
+                
                 int temp_file_count = 0;
-                foreach (string fullpath in delta_list)
+                foreach (string file_name in delta_list)
                 {
                     if (CancelFlag) return;
-                    meirei = MakeWaifu2xString(temp_file_info.imageTempPath + fullpath, temp_file_info.convertTempPath + fullpath, w_info);
+
+                    meirei = MakeAnime4KString(temp_file_info.imageTempPath + file_name, temp_file_info.convertTempPath + file_name, c_info);
+                    if (Waifu2xRadio.Checked)
+                    {
+                        meirei = MakeWaifu2xString(temp_file_info.imageTempPath + file_name, temp_file_info.convertTempPath + file_name, c_info);
+                        this.Invoke(myEvent, "convert engine is waifu2x");
+                    }
                     ExecFFmpegCommand(meirei);
-                    this.Invoke(myEvent, "converted: "+ fullpath +" ("+ temp_file_count.ToString()+"/" +delta_list.Count.ToString()+")" );
+                    this.Invoke(myEvent, "converted: "+ file_name +" ("+ temp_file_count.ToString()+"/" +delta_list.Count.ToString()+")" );
                     temp_file_count += 1;
                 }
 
             }
 			if (I2VCheckBox.Checked)
 			{
-				meirei = MakeImage2VideoString(temp_file_info.convertTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.avi", video_info);
+				meirei = MakeImage2VideoString(temp_file_info.convertTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.mp4", video_info);
+				//meirei = MakeImage2VideoString(temp_file_info.imageTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.avi", video_info);
 				ExecFFmpegCommand(meirei);
 			}
 			if (AddAudioCheckBox.Checked)
 			{
-				meirei = MakeComAudioString(temp_file_info.videoTempPath + "video_output.avi", temp_file_info.audioTempPath + "audio1.aac", outputFilePath);
+				meirei = MakeComAudioString(temp_file_info.videoTempPath + "video_output.mp4", temp_file_info.audioTempPath + "audio1.wav", outputFilePath);
 				ExecFFmpegCommand(meirei);
 			}
 
-
-		}
+            this.Invoke(myEvent, "END command");
+        }
 
 
         Command MakeSepAudioString(string videoPath, string audioPath)
 		{
 			Command ret_val = new Command();
 			ret_val.command = FFmpegPath + "ffmpeg.exe";
-			ret_val.option = "-i "+ videoPath + " -vn -acodec copy "+ audioPath;
+			ret_val.option = "-i "+videoPath + " -acodec copy " + audioPath;
 			return ret_val;
 		}
 
@@ -208,7 +219,7 @@ namespace AnimeLoupe2x
 			Command ret_val = new Command();
 			ret_val.command = FFmpegPath + "ffmpeg.exe";
 			//ret_val.option = @"-i F:\Program\C#\AnimeLoupe2x\temp\video_output.avi -i F:\Program\C#\AnimeLoupe2x\temp\audio.aac -c:v copy F:\Program\C#\AnimeLoupe2x\temp\output1.mp4";
-			ret_val.option = @"-i "+ baseVideoPath + " -i "+audioPath+" -c copy -map 0:v:0 -map 1:a:0 "+outVideoPath;
+			ret_val.option = @"-i "+ baseVideoPath + " -i "+audioPath+" -c copy -map 0:v:0 -map 1:a:0 " + "\"" + outVideoPath + "\"";
 			return ret_val;
 		}
 
@@ -216,7 +227,7 @@ namespace AnimeLoupe2x
 		{
 			Command ret_val = new Command();
 			ret_val.command = FFmpegPath + "ffmpeg.exe";
-			ret_val.option = @"-i "+ videoPath + " -vcodec png "+tempPath;
+			ret_val.option = @"-i "+ "\"" + videoPath + "\"" + " -vcodec png " +tempPath;
 			//ret_val.option = @"-i F:\Program\C#\AnimeLoupe2x\input.mp4";
 			return ret_val;
 		}
@@ -225,18 +236,26 @@ namespace AnimeLoupe2x
 		{
 			Command ret_val = new Command();
 			ret_val.command = FFmpegPath + "ffmpeg.exe";
-			ret_val.option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -pix_fmt yuv420p "+"-b "+ vi.bitrate + " -r "+vi.fps+" "+ videoPath;
-			return ret_val;
+			//ret_val.option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -q 0 -pix_fmt yuv420p "+"-b "+ vi.bitrate + " -r "+vi.fps+" "+ "\"" + videoPath+"\"";
+            ret_val.option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -crf 0 -pix_fmt yuv420p" + " -r "+vi.fps+" " +videoPath;
+            return ret_val;
 		}
 
-		Command MakeWaifu2xString(string inputFile, string outputFile, Waifu2xInfo info)
+		Command MakeWaifu2xString(string inputFile, string outputFile, ConvertInfo info)
 		{
 			Command ret_val = new Command();
 			ret_val.command = Waifu2xPath + "waifu2x-caffe-cui.exe";
 			ret_val.option = "-i "+ inputFile + @" -o "+ outputFile+ " -m "+info.mode+" -s "+info.scale.ToString("0.00") + " -n "+info.noise_level.ToString()+" -p "+info.process+ " -y "+info.y;
 			return ret_val;
 		}
-
+        
+        Command MakeAnime4KString(string inputFile, string outputFile, ConvertInfo info)
+        {
+            Command ret_val = new Command();
+            ret_val.command = Anime4KPath + "Anime4KCPP_CLI.exe";
+            ret_val.option = "-i " + inputFile + @" -o " + outputFile + " -z " + info.scale.ToString("0.000") + " -q -a";
+            return ret_val;
+        }
 
 		int ExecFFmpegCommand(Command meirei)
 		{
@@ -257,11 +276,17 @@ namespace AnimeLoupe2x
 			string line;
 			while ((line = reader.ReadLine()) != null)
 			{
-				this.Invoke(myEvent, line);
+                /*
+                int indxc = line.IndexOf("frame=");
+                if (indxc > 0)
+                {
 
-			}
+                }
+                */
+                this.Invoke(myEvent, line);
+            }
 			proc.Close();
-			this.Invoke(myEvent, "END command");
+			
 			return 0;
 		}
 
@@ -387,6 +412,8 @@ for (int i = 0; i < 1; i++)
 			Waifu2xCheckBox.Checked = Properties.Settings.Default.waifu2x_flag;
 			I2VCheckBox.Checked = Properties.Settings.Default.image2video_flag;
 			AddAudioCheckBox.Checked = Properties.Settings.Default.add_audio_flag;
+
+            SizeRateTextBox.Text = Properties.Settings.Default.output_size_rate;
         }
 
 		private void AnimeLoupe2x_FormClosing(object sender, FormClosingEventArgs e)
@@ -399,6 +426,8 @@ for (int i = 0; i < 1; i++)
 			Properties.Settings.Default.waifu2x_flag = Waifu2xCheckBox.Checked;
 			Properties.Settings.Default.image2video_flag = I2VCheckBox.Checked;
 			Properties.Settings.Default.add_audio_flag = AddAudioCheckBox.Checked;
+
+            Properties.Settings.Default.output_size_rate = SizeRateTextBox.Text;
 
             // ファイルに保存
             Properties.Settings.Default.Save();
@@ -414,7 +443,7 @@ for (int i = 0; i < 1; i++)
             ofd.FileName = System.IO.Path.GetFileName(inputPath.Text);
             //はじめに表示されるフォルダを指定する
             //指定しない（空の文字列）の時は、現在のディレクトリが表示される
-            ofd.InitialDirectory = System.IO.Path.GetDirectoryName(inputPath.Text);
+            if (inputPath.Text != "") ofd.InitialDirectory = System.IO.Path.GetDirectoryName(inputPath.Text);
             //[ファイルの種類]に表示される選択肢を指定する
             //指定しないとすべてのファイルが表示される
             ofd.Filter = "mp4ファイル(*.mp4)|*.mp4|すべてのファイル(*.*)|*.*";
@@ -438,6 +467,7 @@ for (int i = 0; i < 1; i++)
                 //OKボタンがクリックされたとき、選択されたファイル名を表示する
                 Console.WriteLine(ofd.FileName);
                 inputPath.Text = ofd.FileName;
+                outputPath.Text = System.IO.Path.GetDirectoryName(ofd.FileName)+"\\" + System.IO.Path.GetFileNameWithoutExtension(ofd.FileName) + "[convert]" + System.IO.Path.GetExtension(ofd.FileName);
             }
         }
 

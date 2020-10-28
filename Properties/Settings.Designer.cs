@@ -106,5 +106,17 @@ namespace AnimeLoupe2x.Properties {
                 this["add_audio_flag"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string output_size_rate {
+            get {
+                return ((string)(this["output_size_rate"]));
+            }
+            set {
+                this["output_size_rate"] = value;
+            }
+        }
     }
 }

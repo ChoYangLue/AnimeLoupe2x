@@ -50,13 +50,21 @@
             this.TempFilePathGroup = new System.Windows.Forms.GroupBox();
             this.TempFilePathText = new System.Windows.Forms.TextBox();
             this.CancelButton = new System.Windows.Forms.Button();
+            this.ResizeGroup = new System.Windows.Forms.GroupBox();
+            this.SizeRateTextBox = new System.Windows.Forms.TextBox();
+            this.ConvertEngineGroup = new System.Windows.Forms.GroupBox();
+            this.Waifu2xRadio = new System.Windows.Forms.RadioButton();
+            this.Anime4KRadio = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.CommandGroup.SuspendLayout();
             this.OutputGroup.SuspendLayout();
             this.InputGroup.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.TempFilePathGroup.SuspendLayout();
+            this.ResizeGroup.SuspendLayout();
+            this.ConvertEngineGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // LogText
@@ -231,12 +239,14 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.ConvertEngineGroup);
+            this.tabPage2.Controls.Add(this.ResizeGroup);
             this.tabPage2.Location = new System.Drawing.Point(4, 28);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(1290, 280);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "waifu2x setting";
+            this.tabPage2.Text = "common setting";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tabPage3
@@ -288,6 +298,57 @@
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
+            // ResizeGroup
+            // 
+            this.ResizeGroup.Controls.Add(this.SizeRateTextBox);
+            this.ResizeGroup.Location = new System.Drawing.Point(19, 27);
+            this.ResizeGroup.Name = "ResizeGroup";
+            this.ResizeGroup.Size = new System.Drawing.Size(281, 96);
+            this.ResizeGroup.TabIndex = 0;
+            this.ResizeGroup.TabStop = false;
+            this.ResizeGroup.Text = "SizeSetting";
+            // 
+            // SizeRateTextBox
+            // 
+            this.SizeRateTextBox.Location = new System.Drawing.Point(25, 44);
+            this.SizeRateTextBox.Name = "SizeRateTextBox";
+            this.SizeRateTextBox.Size = new System.Drawing.Size(100, 25);
+            this.SizeRateTextBox.TabIndex = 1;
+            this.SizeRateTextBox.Text = "2.0";
+            // 
+            // ConvertEngineGroup
+            // 
+            this.ConvertEngineGroup.Controls.Add(this.Anime4KRadio);
+            this.ConvertEngineGroup.Controls.Add(this.Waifu2xRadio);
+            this.ConvertEngineGroup.Location = new System.Drawing.Point(364, 27);
+            this.ConvertEngineGroup.Name = "ConvertEngineGroup";
+            this.ConvertEngineGroup.Size = new System.Drawing.Size(191, 114);
+            this.ConvertEngineGroup.TabIndex = 1;
+            this.ConvertEngineGroup.TabStop = false;
+            this.ConvertEngineGroup.Text = "ConvertEngine";
+            // 
+            // Waifu2xRadio
+            // 
+            this.Waifu2xRadio.AutoSize = true;
+            this.Waifu2xRadio.Location = new System.Drawing.Point(18, 35);
+            this.Waifu2xRadio.Name = "Waifu2xRadio";
+            this.Waifu2xRadio.Size = new System.Drawing.Size(90, 22);
+            this.Waifu2xRadio.TabIndex = 0;
+            this.Waifu2xRadio.Text = "Waifu2x";
+            this.Waifu2xRadio.UseVisualStyleBackColor = true;
+            // 
+            // Anime4KRadio
+            // 
+            this.Anime4KRadio.AutoSize = true;
+            this.Anime4KRadio.Checked = true;
+            this.Anime4KRadio.Location = new System.Drawing.Point(18, 73);
+            this.Anime4KRadio.Name = "Anime4KRadio";
+            this.Anime4KRadio.Size = new System.Drawing.Size(99, 22);
+            this.Anime4KRadio.TabIndex = 1;
+            this.Anime4KRadio.TabStop = true;
+            this.Anime4KRadio.Text = "Anime4K";
+            this.Anime4KRadio.UseVisualStyleBackColor = true;
+            // 
             // AnimeLoupe2x
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -309,9 +370,14 @@
             this.OutputGroup.PerformLayout();
             this.InputGroup.ResumeLayout(false);
             this.InputGroup.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.TempFilePathGroup.ResumeLayout(false);
             this.TempFilePathGroup.PerformLayout();
+            this.ResizeGroup.ResumeLayout(false);
+            this.ResizeGroup.PerformLayout();
+            this.ConvertEngineGroup.ResumeLayout(false);
+            this.ConvertEngineGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -341,6 +407,11 @@
         private System.Windows.Forms.GroupBox TempFilePathGroup;
         private System.Windows.Forms.TextBox TempFilePathText;
         private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.GroupBox ResizeGroup;
+        private System.Windows.Forms.TextBox SizeRateTextBox;
+        private System.Windows.Forms.GroupBox ConvertEngineGroup;
+        private System.Windows.Forms.RadioButton Anime4KRadio;
+        private System.Windows.Forms.RadioButton Waifu2xRadio;
     }
 }
 
