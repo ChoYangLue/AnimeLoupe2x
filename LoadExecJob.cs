@@ -7,7 +7,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.IO;
 
-namespace H264ConvertServer
+namespace AnimeLoupe2x
 {
 	public delegate void OutputDelegate(string output_text);
 

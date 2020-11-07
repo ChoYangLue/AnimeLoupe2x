@@ -167,7 +167,7 @@ namespace AnimeLoupe2x
                 ConvertInfo c_info = new ConvertInfo();
                 c_info.mode = "noise_scale";
                 c_info.process = "cudnn";
-                c_info.scale = 1.5f;
+                c_info.scale = 2.0f;
                 if (SizeRateTextBox.Text != "") c_info.scale = float.Parse(SizeRateTextBox.Text);
                 c_info.noise_level = 2;
                 c_info.y = "upconv_7_anime_style_art_rgb";
@@ -237,7 +237,8 @@ namespace AnimeLoupe2x
 			Command ret_val = new Command();
 			ret_val.command = FFmpegPath + "ffmpeg.exe";
 			//ret_val.option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -q 0 -pix_fmt yuv420p "+"-b "+ vi.bitrate + " -r "+vi.fps+" "+ "\"" + videoPath+"\"";
-            ret_val.option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -crf 0 -pix_fmt yuv420p" + " -r "+vi.fps+" " +videoPath;
+            //ret_val.option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -crf 0 -pix_fmt yuv420p" + " -r "+vi.fps+" " +videoPath;
+            ret_val.option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec h264_nvenc -crf 0 -pix_fmt yuv420p" + " -r "+vi.fps+" " +videoPath;
             return ret_val;
 		}
 
