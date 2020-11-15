@@ -41,6 +41,10 @@ namespace AnimeLoupe2x
         string Waifu2xPath = Directory.GetCurrentDirectory() + @"\Lib\waifu2x-caffe\";
         string Anime4KPath = Directory.GetCurrentDirectory() + @"\Lib\Anime4KCPP_CLI\";
 
+        string TEMP_AUDIO_FILE_NAME = "audio1.wav";
+        string TEMP_VIDEO_FILE_NAME = "video_output.avi";
+        string TEMP_BASE_DIR = Directory.GetCurrentDirectory() + @"\temp\";
+
         public struct VideoInfo
         {
             public string fps;
@@ -73,19 +77,6 @@ namespace AnimeLoupe2x
         }
 
         public bool CancelFlag;
-
-        private void RunButton_Click(object sender, EventArgs e)
-        {
-			myEvent = new MyEventHandler(event_DataReceived);
-
-			//System.Environment.CurrentDirectory = @"C:\Users\";
-			Console.WriteLine(System.Environment.CurrentDirectory);
-
-			Task task = Task.Run(() => {
-				CommandThreadFunc();
-			});
-
-		}
 
 		private void myProcess_Exited(object sender, System.EventArgs e)
 		{
@@ -121,14 +112,11 @@ namespace AnimeLoupe2x
 				return;
 			}
 
-            string dirpath = Directory.GetCurrentDirectory();
-            Console.WriteLine(dirpath);
-
             string inputFilePath = inputPath.Text;
 			string outputFilePath = outputPath.Text;
 
             TempFileInfo temp_file_info = new TempFileInfo();
-            MakeTempDir(ref temp_file_info);
+            InitalizeTempDir(ref temp_file_info);
 
             Command meirei;
 
@@ -143,7 +131,7 @@ namespace AnimeLoupe2x
 			}
 			if (V2ACheckBox.Checked)
 			{
-				meirei = MakeSepAudioString(inputFilePath, temp_file_info.audioTempPath + "audio1.wav");
+				meirei = MakeSepAudioString(inputFilePath, temp_file_info.audioTempPath + TEMP_AUDIO_FILE_NAME);
 				ExecFFmpegCommand(meirei);
 			}
 			if (Waifu2xCheckBox.Checked)
@@ -167,7 +155,7 @@ namespace AnimeLoupe2x
                 ConvertInfo c_info = new ConvertInfo();
                 c_info.mode = "noise_scale";
                 c_info.process = "cudnn";
-                c_info.scale = 2.0f;
+                c_info.scale = 2.25f; // 720x480
                 if (SizeRateTextBox.Text != "") c_info.scale = float.Parse(SizeRateTextBox.Text);
                 c_info.noise_level = 2;
                 c_info.y = "upconv_7_anime_style_art_rgb";
@@ -192,17 +180,42 @@ namespace AnimeLoupe2x
             }
 			if (I2VCheckBox.Checked)
 			{
-				meirei = MakeImage2VideoString(temp_file_info.convertTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.mp4", video_info);
-				//meirei = MakeImage2VideoString(temp_file_info.imageTempPath + "image_%08d.png", temp_file_info.videoTempPath + "video_output.avi", video_info);
-				ExecFFmpegCommand(meirei);
+				meirei = MakeImage2VideoString(temp_file_info.convertTempPath + "image_%08d.png", temp_file_info.videoTempPath + TEMP_VIDEO_FILE_NAME, video_info);
+                ExecFFmpegCommand(meirei);
 			}
 			if (AddAudioCheckBox.Checked)
 			{
-				meirei = MakeComAudioString(temp_file_info.videoTempPath + "video_output.mp4", temp_file_info.audioTempPath + "audio1.wav", outputFilePath);
+				meirei = MakeComAudioString(temp_file_info.videoTempPath + TEMP_VIDEO_FILE_NAME, temp_file_info.audioTempPath + TEMP_AUDIO_FILE_NAME, outputFilePath);
 				ExecFFmpegCommand(meirei);
 			}
 
+            if (ConvertTestCheckBox.Checked)
+            {
+                string image_file_format = ".png";
+
+                var com1 = new LoadExecJob();
+                com1.SetOutputFunc(test_func);
+
+                meirei = MakeVideo2ImageString(inputFilePath, temp_file_info.imageTempPath + "image_%08d"+ image_file_format);
+                com1.RunFFmpegAndJoin(meirei.command, meirei.option);
+
+                meirei = MakeSepAudioString(inputFilePath, temp_file_info.audioTempPath + TEMP_AUDIO_FILE_NAME);
+                com1.RunFFmpegAndJoin(meirei.command, meirei.option);
+
+                meirei = MakeImage2VideoString(temp_file_info.imageTempPath + "image_%08d" + image_file_format, temp_file_info.videoTempPath + TEMP_VIDEO_FILE_NAME, video_info);
+                com1.RunFFmpegAndJoin(meirei.command, meirei.option);
+
+                meirei = MakeComAudioString(temp_file_info.videoTempPath + TEMP_VIDEO_FILE_NAME, temp_file_info.audioTempPath + TEMP_AUDIO_FILE_NAME, outputFilePath);
+                com1.RunFFmpegAndJoin(meirei.command, meirei.option);
+            }
+
+
             this.Invoke(myEvent, "END command");
+        }
+
+        void test_func(string out_txt)
+        {
+            this.Invoke(myEvent, out_txt);
         }
 
 
@@ -228,7 +241,6 @@ namespace AnimeLoupe2x
 			Command ret_val = new Command();
 			ret_val.command = FFmpegPath + "ffmpeg.exe";
 			ret_val.option = @"-i "+ "\"" + videoPath + "\"" + " -vcodec png " +tempPath;
-			//ret_val.option = @"-i F:\Program\C#\AnimeLoupe2x\input.mp4";
 			return ret_val;
 		}
 
@@ -326,17 +338,16 @@ namespace AnimeLoupe2x
             return 0;
         }
 
-        void MakeTempDir(ref TempFileInfo tfi)
+        void InitalizeTempDir(ref TempFileInfo tfi)
         {
-            tfi.baseTempPath = Directory.GetCurrentDirectory() + @"\temp\";
-            tfi.imageTempPath = tfi.baseTempPath + @"image\";
-            tfi.convertTempPath = tfi.baseTempPath + @"convert\";
-            tfi.audioTempPath = tfi.baseTempPath + @"audio\";
-            tfi.videoTempPath = tfi.baseTempPath + @"video\";
+            tfi.imageTempPath = TEMP_BASE_DIR + @"image\";
+            tfi.convertTempPath = TEMP_BASE_DIR + @"convert\";
+            tfi.audioTempPath = TEMP_BASE_DIR + @"audio\";
+            tfi.videoTempPath = TEMP_BASE_DIR + @"video\";
 
-            if (Directory.Exists(tfi.baseTempPath) == false)
+            if (Directory.Exists(TEMP_BASE_DIR) == false)
             {
-                Directory.CreateDirectory(tfi.baseTempPath);
+                Directory.CreateDirectory(TEMP_BASE_DIR);
                 Directory.CreateDirectory(tfi.imageTempPath);
                 Directory.CreateDirectory(tfi.convertTempPath);
                 Directory.CreateDirectory(tfi.audioTempPath);
@@ -374,35 +385,36 @@ namespace AnimeLoupe2x
         int ExecWaifu2xCommand()
 		{
 			
-// List<string> str
-for (int i = 0; i < 1; i++)
-{
-	while (exec_com_flag == false)
-	{
-		Console.WriteLine("waiting");
-		Thread.Sleep(1000);
-	}
+        // List<string> str
+        for (int i = 0; i < 1; i++)
+        {
+	        while (exec_com_flag == false)
+	        {
+		        Console.WriteLine("waiting");
+		        Thread.Sleep(1000);
+	        }
 
-	process = new Process();
+	        process = new Process();
 
-	process.StartInfo.FileName = @"F:\Program\C#\AnimeLoupe2x\ffmpeg.exe";
-	process.StartInfo.Arguments = @"-i F:\Program\C#\AnimeLoupe2x\input.mp4 -vcodec png F:\Program\C#\AnimeLoupe2x\temp\image_%05d.png";
+	        process.StartInfo.FileName = @"F:\Program\C#\AnimeLoupe2x\ffmpeg.exe";
+	        process.StartInfo.Arguments = @"-i F:\Program\C#\AnimeLoupe2x\input.mp4 -vcodec png F:\Program\C#\AnimeLoupe2x\temp\image_%05d.png";
 
-	process.StartInfo.UseShellExecute = false; // シェル機能オフ
-	process.StartInfo.CreateNoWindow = true; // コマンドプロンプトを非表示
-	process.StartInfo.RedirectStandardOutput = true; // 標準出力をリダイレクト
-	process.OutputDataReceived += new DataReceivedEventHandler(p_OutputDataReceived);
-	process.StartInfo.Arguments = @"-i F:\Program\C#\AnimeLoupe2x\input.mp4 -vcodec png F:\Program\C#\AnimeLoupe2x\temp\image_%05d.png";
-	process.EnableRaisingEvents = true;
-	process.Exited += new EventHandler(myProcess_Exited);
+	        process.StartInfo.UseShellExecute = false; // シェル機能オフ
+	        process.StartInfo.CreateNoWindow = true; // コマンドプロンプトを非表示
+	        process.StartInfo.RedirectStandardOutput = true; // 標準出力をリダイレクト
+	        process.OutputDataReceived += new DataReceivedEventHandler(p_OutputDataReceived);
+	        process.StartInfo.Arguments = @"-i F:\Program\C#\AnimeLoupe2x\input.mp4 -vcodec png F:\Program\C#\AnimeLoupe2x\temp\image_%05d.png";
+	        process.EnableRaisingEvents = true;
+	        process.Exited += new EventHandler(myProcess_Exited);
 
-	process.Start();
-	process.BeginOutputReadLine();
-	exec_com_flag = false;
-}
+	        process.Start();
+	        process.BeginOutputReadLine();
+	        exec_com_flag = false;
+        }
 			return 0;
 		}
 
+        /* 設定の読み込みと保存 */
 		private void AnimeLoupe2x_Load(object sender, EventArgs e)
 		{
 			inputPath.Text = Properties.Settings.Default.input_path;
@@ -413,6 +425,7 @@ for (int i = 0; i < 1; i++)
 			Waifu2xCheckBox.Checked = Properties.Settings.Default.waifu2x_flag;
 			I2VCheckBox.Checked = Properties.Settings.Default.image2video_flag;
 			AddAudioCheckBox.Checked = Properties.Settings.Default.add_audio_flag;
+            ConvertTestCheckBox.Checked = Properties.Settings.Default.convert_test_flag;
 
             SizeRateTextBox.Text = Properties.Settings.Default.output_size_rate;
         }
@@ -427,6 +440,7 @@ for (int i = 0; i < 1; i++)
 			Properties.Settings.Default.waifu2x_flag = Waifu2xCheckBox.Checked;
 			Properties.Settings.Default.image2video_flag = I2VCheckBox.Checked;
 			Properties.Settings.Default.add_audio_flag = AddAudioCheckBox.Checked;
+            Properties.Settings.Default.convert_test_flag = ConvertTestCheckBox.Checked;
 
             Properties.Settings.Default.output_size_rate = SizeRateTextBox.Text;
 
@@ -434,6 +448,7 @@ for (int i = 0; i < 1; i++)
             Properties.Settings.Default.Save();
         }
 
+        /* ボタンクリック関連 */
         private void InputPathButton_Click(object sender, EventArgs e)
         {
             //OpenFileDialogクラスのインスタンスを作成
@@ -470,6 +485,18 @@ for (int i = 0; i < 1; i++)
                 inputPath.Text = ofd.FileName;
                 outputPath.Text = System.IO.Path.GetDirectoryName(ofd.FileName)+"\\" + System.IO.Path.GetFileNameWithoutExtension(ofd.FileName) + "[convert]" + System.IO.Path.GetExtension(ofd.FileName);
             }
+        }
+
+        private void RunButton_Click(object sender, EventArgs e)
+        {
+            myEvent = new MyEventHandler(event_DataReceived);
+
+            Console.WriteLine(System.Environment.CurrentDirectory);
+
+            Task task = Task.Run(() => {
+                CommandThreadFunc();
+            });
+
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
