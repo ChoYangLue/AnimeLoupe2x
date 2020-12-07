@@ -7,6 +7,13 @@
 * VisualStudio2017 or 2019
 
 # How to use
+* put ffmpeg.exe on AnimeLoupe2x/Lib/ffmpeg/
+** https://www.ffmpeg.org/download.html
+* put waifu2x on AnimeLoupe2x/Lib/waifu2x-caffe/
+** https://github.com/lltcggie/waifu2x-caffe/releases
+* put Anime4KCPP on AnimeLoupe2x/Lib/Anime4KCPP_CLI
+** https://github.com/TianZerL/Anime4KCPP/releases
 
-1. put ffmpeg.exe on AnimeLoupe2x/Lib/ffmpeg/
-1. put waifu2x-
+# ActionItem
+- [x] convert with ffmpeg
+- [ ] convert test function
