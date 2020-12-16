@@ -156,6 +156,7 @@ namespace AnimeLoupe2x
                 c_info.mode = "noise_scale";
                 c_info.process = "cudnn";
                 c_info.scale = 2.25f; // 720x480
+                //c_info.scale = 1.50f; // 1280x720
                 if (SizeRateTextBox.Text != "") c_info.scale = float.Parse(SizeRateTextBox.Text);
                 c_info.noise_level = 2;
                 c_info.y = "upconv_7_anime_style_art_rgb";
@@ -338,8 +339,25 @@ namespace AnimeLoupe2x
             return 0;
         }
 
+        void UpdateTempDirPath()
+        {
+            if (TempFilePathText.Text == "")
+            {
+                TEMP_BASE_DIR = Directory.GetCurrentDirectory() + @"\temp\";
+                return;
+            }
+
+            if (!Directory.Exists(TempFilePathText.Text))
+            {
+                return;
+            }
+            TEMP_BASE_DIR = TEMP_BASE_DIR = TempFilePathText.Text + @"\temp\";
+        }
+
         void InitalizeTempDir(ref TempFileInfo tfi)
         {
+            UpdateTempDirPath();
+
             tfi.imageTempPath = TEMP_BASE_DIR + @"image\";
             tfi.convertTempPath = TEMP_BASE_DIR + @"convert\";
             tfi.audioTempPath = TEMP_BASE_DIR + @"audio\";
@@ -428,6 +446,7 @@ namespace AnimeLoupe2x
             ConvertTestCheckBox.Checked = Properties.Settings.Default.convert_test_flag;
 
             SizeRateTextBox.Text = Properties.Settings.Default.output_size_rate;
+            TempFilePathText.Text = Properties.Settings.Default.temp_dir_path;
         }
 
 		private void AnimeLoupe2x_FormClosing(object sender, FormClosingEventArgs e)
@@ -443,6 +462,7 @@ namespace AnimeLoupe2x
             Properties.Settings.Default.convert_test_flag = ConvertTestCheckBox.Checked;
 
             Properties.Settings.Default.output_size_rate = SizeRateTextBox.Text;
+            Properties.Settings.Default.temp_dir_path = TempFilePathText.Text;
 
             // ファイルに保存
             Properties.Settings.Default.Save();
@@ -507,7 +527,8 @@ namespace AnimeLoupe2x
 
         private void ClearTempButton_Click(object sender, EventArgs e)
         {
-            DeleteTempDir(Directory.GetCurrentDirectory() + @"\temp");
+            UpdateTempDirPath();
+            DeleteTempDir(TEMP_BASE_DIR);
         }
     }
 }

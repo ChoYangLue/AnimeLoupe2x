@@ -130,5 +130,17 @@ namespace AnimeLoupe2x.Properties {
                 this["convert_test_flag"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
+        public string temp_dir_path {
+            get {
+                return ((string)(this["temp_dir_path"]));
+            }
+            set {
+                this["temp_dir_path"] = value;
+            }
+        }
     }
 }

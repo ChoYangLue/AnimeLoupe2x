@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.CommandGroup = new System.Windows.Forms.GroupBox();
+            this.ConvertTestCheckBox = new System.Windows.Forms.CheckBox();
             this.V2ICheckBox = new System.Windows.Forms.CheckBox();
             this.V2ACheckBox = new System.Windows.Forms.CheckBox();
             this.Waifu2xCheckBox = new System.Windows.Forms.CheckBox();
@@ -55,7 +56,6 @@
             this.TempFilePathGroup = new System.Windows.Forms.GroupBox();
             this.TempFilePathText = new System.Windows.Forms.TextBox();
             this.CancelButton = new System.Windows.Forms.Button();
-            this.ConvertTestCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.CommandGroup.SuspendLayout();
@@ -133,6 +133,16 @@
             this.CommandGroup.TabIndex = 11;
             this.CommandGroup.TabStop = false;
             this.CommandGroup.Text = "Command";
+            // 
+            // ConvertTestCheckBox
+            // 
+            this.ConvertTestCheckBox.AutoSize = true;
+            this.ConvertTestCheckBox.Location = new System.Drawing.Point(6, 168);
+            this.ConvertTestCheckBox.Name = "ConvertTestCheckBox";
+            this.ConvertTestCheckBox.Size = new System.Drawing.Size(128, 22);
+            this.ConvertTestCheckBox.TabIndex = 9;
+            this.ConvertTestCheckBox.Text = "ConvertTest";
+            this.ConvertTestCheckBox.UseVisualStyleBackColor = true;
             // 
             // V2ICheckBox
             // 
@@ -350,16 +360,6 @@
             this.CancelButton.Text = "Stop";
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
-            // 
-            // ConvertTestCheckBox
-            // 
-            this.ConvertTestCheckBox.AutoSize = true;
-            this.ConvertTestCheckBox.Location = new System.Drawing.Point(6, 168);
-            this.ConvertTestCheckBox.Name = "ConvertTestCheckBox";
-            this.ConvertTestCheckBox.Size = new System.Drawing.Size(128, 22);
-            this.ConvertTestCheckBox.TabIndex = 9;
-            this.ConvertTestCheckBox.Text = "ConvertTest";
-            this.ConvertTestCheckBox.UseVisualStyleBackColor = true;
             // 
             // AnimeLoupe2x
             // 
