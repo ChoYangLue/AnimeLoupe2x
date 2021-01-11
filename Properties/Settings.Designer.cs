@@ -13,7 +13,7 @@ namespace AnimeLoupe2x.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
-    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
         
@@ -26,120 +26,96 @@ namespace AnimeLoupe2x.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string input_path {
+        public string TempFolderPathSetting {
             get {
-                return ((string)(this["input_path"]));
+                return ((string)(this["TempFolderPathSetting"]));
             }
             set {
-                this["input_path"] = value;
+                this["TempFolderPathSetting"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string output_path {
+        public string InputFolderPathSetting {
             get {
-                return ((string)(this["output_path"]));
+                return ((string)(this["InputFolderPathSetting"]));
             }
             set {
-                this["output_path"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool video2image_flag {
-            get {
-                return ((bool)(this["video2image_flag"]));
-            }
-            set {
-                this["video2image_flag"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool video2audio_flag {
-            get {
-                return ((bool)(this["video2audio_flag"]));
-            }
-            set {
-                this["video2audio_flag"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool waifu2x_flag {
-            get {
-                return ((bool)(this["waifu2x_flag"]));
-            }
-            set {
-                this["waifu2x_flag"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool image2video_flag {
-            get {
-                return ((bool)(this["image2video_flag"]));
-            }
-            set {
-                this["image2video_flag"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool add_audio_flag {
-            get {
-                return ((bool)(this["add_audio_flag"]));
-            }
-            set {
-                this["add_audio_flag"] = value;
+                this["InputFolderPathSetting"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string output_size_rate {
+        public string OutputFolderPathSetting {
             get {
-                return ((string)(this["output_size_rate"]));
+                return ((string)(this["OutputFolderPathSetting"]));
             }
             set {
-                this["output_size_rate"] = value;
+                this["OutputFolderPathSetting"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool convert_test_flag {
+        public bool Video2ImageCheckBoxSetting {
             get {
-                return ((bool)(this["convert_test_flag"]));
+                return ((bool)(this["Video2ImageCheckBoxSetting"]));
             }
             set {
-                this["convert_test_flag"] = value;
+                this["Video2ImageCheckBoxSetting"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
-        public string temp_dir_path {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Video2AudioCheckBoxSetting {
             get {
-                return ((string)(this["temp_dir_path"]));
+                return ((bool)(this["Video2AudioCheckBoxSetting"]));
             }
             set {
-                this["temp_dir_path"] = value;
+                this["Video2AudioCheckBoxSetting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ConvertCheckBoxSetting {
+            get {
+                return ((bool)(this["ConvertCheckBoxSetting"]));
+            }
+            set {
+                this["ConvertCheckBoxSetting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Image2VideoCheckBoxSetting {
+            get {
+                return ((bool)(this["Image2VideoCheckBoxSetting"]));
+            }
+            set {
+                this["Image2VideoCheckBoxSetting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CompAudioCheckBoxSetting {
+            get {
+                return ((bool)(this["CompAudioCheckBoxSetting"]));
+            }
+            set {
+                this["CompAudioCheckBoxSetting"] = value;
             }
         }
     }

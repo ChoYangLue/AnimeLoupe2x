@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
 using System.IO;
@@ -98,7 +94,7 @@ namespace AnimeLoupe2x
 
 		/* ffmpeg対応 */
 		public void RunFFmpegAndJoin(string order, string option)
-        {
+		{
 			m_process = new Process();
 			m_process.StartInfo.FileName = order;
 			m_process.StartInfo.Arguments = option;
@@ -133,11 +129,11 @@ namespace AnimeLoupe2x
 			DebugPrint("PID: " + m_pid + " is exited");
 		}
 
-		
+
 		/* デバッグ用 */
 		private void DebugPrint(string txt)
 		{
-			Console.WriteLine("[LoadExecJob] "+txt);
+			Console.WriteLine("[LoadExecJob] " + txt);
 		}
 	}
 }
