@@ -63,13 +63,13 @@ namespace AnimeLoupe2x
             Directory.Delete(targetDirectoryPath, false);
         }
 
-        public void InitTempDirectory(string root_dir_path)
+        public void InitTempDirectory(string root_dir_path, bool recreate)
         {
             // hoge/hoge
 
             string temp_dir_root = root_dir_path + @"\temp\";
 
-            if (Directory.Exists(temp_dir_root))
+            if (Directory.Exists(temp_dir_root) && recreate)
             {
                 DeleteTempDir(temp_dir_root);
             }

@@ -41,33 +41,38 @@ namespace AnimeLoupe2x
             // 動画から音声を切り出し
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, Video2AudioCheckBox) || test_run)
             {
+                if (cancel_flag) return;
                 commands.MakeSepAudioString(paths.InputFile, paths.GetTempAudioDir() + @"audio.wav");
                 com1.SetOutputFunc(Video2AudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
-                if (cancel_flag) return;
             }
 
             // 動画から画像を切り出し
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, Video2ImageCheckBox) || test_run)
             {
+                if (cancel_flag) return;
                 commands.MakeVideo2ImageString(paths.InputFile, paths.GetTempImageDir() + "image_%08d.png");
                 com1.SetOutputFunc(Video2ImageOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
-                if (cancel_flag) return;
             }
 
             /* waifu */
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, ConvertCheckBox))
             {
+                //commands.ci_scale = 1.25f; // 1280x720
+                commands.ci_scale = 2.00f; // 1280x720
+
                 string[] pre_images = Directory.GetFiles(paths.GetTempImageDir(), "*.png");
-                foreach (string pre_image in pre_images)
+                foreach (string img in pre_images)
                 {
-                    Console.WriteLine(pre_image);
+                    string pre_image = Path.GetFileName(img);
                     commands.MakeAnime4KString(paths.GetTempImageDir() + pre_image, paths.GetTempConvertDir() + pre_image);
                     //commands.MakeWaifu2xString();
+                    //Console.WriteLine(commands.option);
                     com1.SetOutputFunc(ConvertOutput);
                     com1.Run(commands.command, commands.option);
                     com1.Join();
+                    this.Dispatcher.Invoke(UpdateLabelContentEvent, ConvertLabel, pre_image);
                     if (cancel_flag) return;
                 }
                 
@@ -76,20 +81,20 @@ namespace AnimeLoupe2x
             // 画像から動画を作成
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, Image2VideoCheckBox) || test_run)
             {
+                if (cancel_flag) return;
                 commands.MakeImage2VideoString(paths.GetTempConvertDir() + "image_%08d.png", paths.GetTempVideoDir() + "video.avi");
                 if (test_run) commands.MakeImage2VideoString(paths.GetTempImageDir() + "image_%08d.png", paths.GetTempVideoDir() + "video.avi");
                 com1.SetOutputFunc(Image2VideoOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
-                if (cancel_flag) return;
             }
 
             // 動画と音声を結合
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, CompAudioCheckBox) || test_run)
             {
+                if (cancel_flag) return;
                 commands.MakeComAudioString(paths.GetTempVideoDir() + "video.avi", paths.GetTempAudioDir() + @"audio.wav", paths.OutputFile);
                 com1.SetOutputFunc(CompAudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
-                if (cancel_flag) return;
             }
 
             Console.WriteLine("すごく重い処理その1(´・ω・｀)おわり");
@@ -131,7 +136,7 @@ namespace AnimeLoupe2x
         void ConvertOutput(string out_txt)
         {
             //Console.WriteLine(out_txt);
-            this.Dispatcher.Invoke(UpdateLabelContentEvent, ConvertLabel, out_txt);
+            //this.Dispatcher.Invoke(UpdateLabelContentEvent, ConvertLabel, out_txt);
         }
 
         void Image2VideoOutput(string out_txt)
@@ -147,7 +152,7 @@ namespace AnimeLoupe2x
 
         void CompAudioOutput(string out_txt)
         {
-            //Console.WriteLine(out_txt);
+            Console.WriteLine(out_txt);
             this.Dispatcher.Invoke(UpdateLabelContentEvent, CompAudioLabel, out_txt);
         }
 
@@ -155,7 +160,6 @@ namespace AnimeLoupe2x
         void event_DataReceived(Label label, string data)
         {
             label.Content = data;
-            Console.WriteLine(data);// ［出力］ウィンドウに出力
         }
 
         bool event_CheckBoxIsChecked(CheckBox check_box)
@@ -170,7 +174,7 @@ namespace AnimeLoupe2x
             if (InputPathTextBox.Text == "") return;
             if (OutputPathTextBox.Text == "") OutputPathTextBox.Text = System.IO.Path.GetDirectoryName(InputPathTextBox.Text)+"[conv]"+ System.IO.Path.GetFileName(InputPathTextBox.Text);
 
-            paths.InitTempDirectory(TempFolderTextBox.Text);
+            paths.InitTempDirectory(TempFolderTextBox.Text, false);
             paths.InputFile = InputPathTextBox.Text;
             paths.OutputFile = OutputPathTextBox.Text;
 
@@ -187,13 +191,20 @@ namespace AnimeLoupe2x
             if (InputPathTextBox.Text == "") return;
             if (OutputPathTextBox.Text == "") OutputPathTextBox.Text = System.IO.Path.GetDirectoryName(InputPathTextBox.Text) + "[conv]" + System.IO.Path.GetFileName(InputPathTextBox.Text);
 
-            paths.InitTempDirectory(TempFolderTextBox.Text);
+            paths.InitTempDirectory(TempFolderTextBox.Text, true);
             paths.InputFile = InputPathTextBox.Text;
             paths.OutputFile = OutputPathTextBox.Text;
+
+            cancel_flag = false;
 
             Task task = Task.Run(() => {
                 ConvertTaskMethod(true);
             });
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            cancel_flag = true;
         }
 
         /* ロードとセーブ関連 */

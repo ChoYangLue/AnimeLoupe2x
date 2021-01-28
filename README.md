@@ -2,9 +2,10 @@
 
 
 # Environment
-* .NET Framework 4.7.2
+* Windows10(64bit)
+* .NET Core 3.1
 * C#
-* VisualStudio2017 or 2019
+* VisualStudio2019
 
 # How to use
 * put ffmpeg.exe on AnimeLoupe2x/Lib/ffmpeg/
@@ -16,4 +17,7 @@
 
 # ActionItem
 - [x] convert with ffmpeg
-- [ ] convert test function
+- [x] convert test function
+- [] folder open button
+- [] switch convert
+- [] temp file name change
