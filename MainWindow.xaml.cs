@@ -57,10 +57,10 @@ namespace AnimeLoupe2x
             }
 
             /* waifu */
-            if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, ConvertCheckBox))
+            if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, ConvertCheckBox) || test_run)
             {
-                //commands.ci_scale = 1.25f; // 1280x720
-                commands.ci_scale = 2.00f; // 1280x720
+                commands.ci_scale = 1.50f; // 1280x720
+                //commands.ci_scale = 2.00f; // 
 
                 string[] pre_images = Directory.GetFiles(paths.GetTempImageDir(), "*.png");
                 foreach (string img in pre_images)
@@ -118,8 +118,15 @@ namespace AnimeLoupe2x
 
         void Video2AudioOutput(string out_txt)
         {
-            //Console.WriteLine(out_txt);
-            this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2AudioLabel, out_txt);
+            Console.WriteLine(out_txt);
+
+            //string[] audio_out = out_txt.Split(" ");
+
+            if (out_txt.IndexOf("size=") >= 0)
+            {
+                string sererere = out_txt.Substring(out_txt.IndexOf("size=") + 7, 5);
+                this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2AudioLabel, sererere);
+            }
         }
 
         void Video2ImageOutput(string out_txt)

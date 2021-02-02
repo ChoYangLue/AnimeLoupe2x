@@ -22,19 +22,26 @@ namespace AnimeLoupe2x
         public string InputFile = "";
         public string OutputFile = "";
 
+        public void SetTempDir(string targetDirectoryPath)
+        {
+            TempImageDir = targetDirectoryPath + @"image\";
+
+            TempConvertDir = targetDirectoryPath + @"convert\";
+
+            TempAudioDir = targetDirectoryPath + @"audio\";
+
+            TempVideoDir = targetDirectoryPath + @"video\";
+        }
+
         public void CreateTempDir(string targetDirectoryPath)
         {
             Directory.CreateDirectory(targetDirectoryPath + @"image\");
-            TempImageDir = targetDirectoryPath + @"image\";
 
             Directory.CreateDirectory(targetDirectoryPath + @"convert\");
-            TempConvertDir = targetDirectoryPath + @"convert\";
 
             Directory.CreateDirectory(targetDirectoryPath + @"audio\");
-            TempAudioDir = targetDirectoryPath + @"audio\";
 
             Directory.CreateDirectory(targetDirectoryPath + @"video\");
-            TempVideoDir = targetDirectoryPath + @"video\";
         }
 
         public void DeleteTempDir(string targetDirectoryPath)
@@ -68,6 +75,8 @@ namespace AnimeLoupe2x
             // hoge/hoge
 
             string temp_dir_root = root_dir_path + @"\temp\";
+
+            SetTempDir(temp_dir_root);
 
             if (Directory.Exists(temp_dir_root) && recreate)
             {
