@@ -14,7 +14,7 @@ namespace AnimeLoupe2x
 		private bool m_running_flag = false;
 		private int m_poling_time_millisec = 1000;
 		private int m_pid = -1;
-
+		private bool m_debug_print = true;
 
 		/* ゲッターとセッター */
 		public void SetOutputFunc(OutputDelegate func)
@@ -34,13 +34,15 @@ namespace AnimeLoupe2x
 
 
 		/* 基本メソッド */
-		public void Run(string order, string option)
+		public void Run(string order, string option, bool dbg_print=true)
 		{
 			if (m_func == null)
 			{
 				Console.WriteLine("m_func == null");
 				return;
 			}
+
+			m_debug_print = dbg_print;
 
 			m_process = new Process();
 			m_process.StartInfo.FileName = order;
@@ -133,6 +135,7 @@ namespace AnimeLoupe2x
 		/* デバッグ用 */
 		private void DebugPrint(string txt)
 		{
+			if (!m_debug_print) return;
 			Console.WriteLine("[LoadExecJob] " + txt);
 		}
 	}

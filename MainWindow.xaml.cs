@@ -42,7 +42,7 @@ namespace AnimeLoupe2x
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, Video2AudioCheckBox) || test_run)
             {
                 if (cancel_flag) return;
-                commands.MakeSepAudioString(paths.InputFile, paths.GetTempAudioDir() + @"audio.wav");
+                commands.MakeSepAudioString(paths.InputFile, paths.GetTempAudioDir() + @"audio.aac");
                 com1.SetOutputFunc(Video2AudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
             }
@@ -62,18 +62,38 @@ namespace AnimeLoupe2x
                 commands.ci_scale = 1.50f; // 1280x720
                 //commands.ci_scale = 2.00f; // 
 
-                string[] pre_images = Directory.GetFiles(paths.GetTempImageDir(), "*.png");
-                foreach (string img in pre_images)
+                var delta_list = new List<string>();
+                string[] pre_temp_files = Directory.GetFiles(paths.GetTempImageDir(), "*.png");
+                foreach (string name in pre_temp_files)
+                {
+                    delta_list.Add(System.IO.Path.GetFileName(name));
+                }
+
+                string[] conv_temp_files = Directory.GetFiles(paths.GetTempConvertDir(), "*.png");
+                foreach (string name in conv_temp_files)
+                {
+                    delta_list.Remove(System.IO.Path.GetFileName(name));
+                    //Console.WriteLine(System.IO.Path.GetFileName(name));
+                }
+
+                int total_img = delta_list.Count;
+                Console.WriteLine("total:"+ total_img.ToString());
+                int num = 0;
+                foreach (string img in delta_list)
                 {
                     string pre_image = Path.GetFileName(img);
                     commands.MakeAnime4KString(paths.GetTempImageDir() + pre_image, paths.GetTempConvertDir() + pre_image);
                     //commands.MakeWaifu2xString();
                     //Console.WriteLine(commands.option);
                     com1.SetOutputFunc(ConvertOutput);
-                    com1.Run(commands.command, commands.option);
+                    com1.Run(commands.command, commands.option, false);
                     com1.Join();
-                    this.Dispatcher.Invoke(UpdateLabelContentEvent, ConvertLabel, pre_image);
+
+                    this.Dispatcher.Invoke(UpdateLabelContentEvent, ConvertLabel, num.ToString() + "/" + total_img.ToString());
+                    
+                    num += 1;
                     if (cancel_flag) return;
+                    
                 }
                 
             }
@@ -92,7 +112,7 @@ namespace AnimeLoupe2x
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, CompAudioCheckBox) || test_run)
             {
                 if (cancel_flag) return;
-                commands.MakeComAudioString(paths.GetTempVideoDir() + "video.avi", paths.GetTempAudioDir() + @"audio.wav", paths.OutputFile);
+                commands.MakeComAudioString(paths.GetTempVideoDir() + "video.avi", paths.GetTempAudioDir() + @"audio.aac", paths.OutputFile);
                 com1.SetOutputFunc(CompAudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
             }
