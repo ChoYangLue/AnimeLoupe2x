@@ -62,9 +62,9 @@ namespace AnimeLoupe2x
 		{
 			command = FFmpegPath + "ffmpeg.exe";
 			//option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -q 0 -pix_fmt yuv420p "+"-b "+ vi.bitrate + " -r "+vi.fps+" "+ "\"" + videoPath+"\"";
-			//option = @"-framerate " + vi.fps + @" -i "+ imagePath + " -vcodec libx264 -crf 0 -pix_fmt yuv420p" + " -r "+vi.fps+" " +videoPath;
-			//option = @"-framerate " + vi_fps + @" -i " + imagePath + " -vcodec h264_nvenc -crf 2 -qp 0 -pix_fmt yuv420p" + " -r " + vi_fps + " " + videoPath;
-			option = @"-framerate " + vi_fps + @" -i " + imagePath + " -vcodec libx265 -crf 2 -qp 0 -pix_fmt yuv420p" + " -r " + vi_fps + " " + videoPath;
+			//option = @"-framerate " + vi_fps + @" -i "+ imagePath + " -vcodec libx264 -crf 2 -qp 20 -pix_fmt yuv420p" + " -r "+ vi_fps + " " +videoPath;
+			option = @"-framerate " + vi_fps + @" -i " + imagePath + " -vcodec h264_nvenc -crf 2 -qp 13 -pix_fmt yuv420p" + " -r " + vi_fps + " " + videoPath;
+			//option = @"-framerate " + vi_fps + @" -i " + imagePath + " -vcodec hevc_nvenc -crf 2 -qp 12 -pix_fmt yuv420p" + " -r " + vi_fps + " " + videoPath;
 		}
 
 		public void MakeWaifu2xString(string inputFile, string outputFile)

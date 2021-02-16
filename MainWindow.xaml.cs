@@ -57,7 +57,7 @@ namespace AnimeLoupe2x
             }
 
             /* waifu */
-            if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, ConvertCheckBox) || test_run)
+            if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, ConvertCheckBox))
             {
                 commands.ci_scale = 1.50f; // 1280x720
                 //commands.ci_scale = 2.00f; // 

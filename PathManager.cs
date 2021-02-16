@@ -74,7 +74,7 @@ namespace AnimeLoupe2x
         {
             // hoge/hoge
 
-            string temp_dir_root = root_dir_path + @"\temp\";
+            string temp_dir_root = root_dir_path + @"temp\";
 
             SetTempDir(temp_dir_root);
 
