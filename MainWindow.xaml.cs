@@ -42,7 +42,7 @@ namespace AnimeLoupe2x
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, Video2AudioCheckBox) || test_run)
             {
                 if (cancel_flag) return;
-                commands.MakeSepAudioString(paths.InputFile, paths.GetTempAudioDir() + @"audio.aac");
+                commands.MakeSepAudioString(paths.InputFile, paths.GetTempAudioDir() + @"audio.wav");
                 com1.SetOutputFunc(Video2AudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
             }
@@ -112,7 +112,7 @@ namespace AnimeLoupe2x
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, CompAudioCheckBox) || test_run)
             {
                 if (cancel_flag) return;
-                commands.MakeComAudioString(paths.GetTempVideoDir() + "video.avi", paths.GetTempAudioDir() + @"audio.aac", paths.OutputFile);
+                commands.MakeComAudioString(paths.GetTempVideoDir() + "video.avi", paths.GetTempAudioDir() + @"audio.wav", paths.OutputFile);
                 com1.SetOutputFunc(CompAudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
             }
@@ -132,20 +132,22 @@ namespace AnimeLoupe2x
                 string bitrate_tmp = out_txt.Substring(out_txt.IndexOf("bitrate:") + 9, 6);
                 commands.vi_bitrate = bitrate_tmp.Replace(" ", "");
             }
+            if (out_txt.IndexOf("time=") > 0)
+            {
+                string time_tmp = out_txt.Substring(out_txt.IndexOf("time=") + 5, 8);
+            }
 
-            this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2ImageLabel, out_txt);
+            //this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2ImageLabel, out_txt);
         }
 
         void Video2AudioOutput(string out_txt)
         {
             Console.WriteLine(out_txt);
 
-            //string[] audio_out = out_txt.Split(" ");
-
-            if (out_txt.IndexOf("size=") >= 0)
+            if (out_txt.IndexOf("time=") > 0)
             {
-                string sererere = out_txt.Substring(out_txt.IndexOf("size=") + 7, 5);
-                this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2AudioLabel, sererere);
+                string time_tmp = out_txt.Substring(out_txt.IndexOf("time=") + 5, 8);
+                this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2AudioLabel, time_tmp);
             }
         }
 
@@ -153,10 +155,10 @@ namespace AnimeLoupe2x
         {
             Console.WriteLine(out_txt);
 
-            if (out_txt.IndexOf("frame=") >= 0)
+            if (out_txt.IndexOf("time=") > 0)
             {
-                string sererere = out_txt.Substring(out_txt.IndexOf("frame=") + 7, 5);
-                this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2ImageLabel, sererere);
+                string time_tmp = out_txt.Substring(out_txt.IndexOf("time=") + 5, 8);
+                this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2ImageLabel, time_tmp);
             }
         }
 
@@ -170,17 +172,22 @@ namespace AnimeLoupe2x
         {
             Console.WriteLine(out_txt);
 
-            if (out_txt.IndexOf("frame=") >= 0)
+            if (out_txt.IndexOf("time=") > 0)
             {
-                string sererere = out_txt.Substring(out_txt.IndexOf("frame=") + 7, 5);
-                this.Dispatcher.Invoke(UpdateLabelContentEvent, Image2VideoLabel, sererere);
+                string time_tmp = out_txt.Substring(out_txt.IndexOf("time=") + 5, 8);
+                this.Dispatcher.Invoke(UpdateLabelContentEvent, Image2VideoLabel, time_tmp);
             }
         }
 
         void CompAudioOutput(string out_txt)
         {
             Console.WriteLine(out_txt);
-            this.Dispatcher.Invoke(UpdateLabelContentEvent, CompAudioLabel, out_txt);
+
+            if (out_txt.IndexOf("time=") > 0)
+            {
+                string time_tmp = out_txt.Substring(out_txt.IndexOf("time=") + 5, 8);
+                this.Dispatcher.Invoke(UpdateLabelContentEvent, CompAudioLabel, time_tmp);
+            }
         }
 
         /* デリゲート */
