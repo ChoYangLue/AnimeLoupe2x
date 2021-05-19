@@ -27,9 +27,10 @@ namespace AnimeLoupe2x
         PathManager paths;
         bool cancel_flag;
 
-        void ConvertTaskMethod(bool test_run = false)
+        void ConvertTaskMethod(bool test_run = false, float scale = 0.0f)
         {
             Console.WriteLine("すごく重い処理その1(´・ω・｀)はじまり");
+            string audio_temp = @"audio.aac";
 
             var com1 = new LoadExecJob();
 
@@ -42,7 +43,7 @@ namespace AnimeLoupe2x
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, Video2AudioCheckBox) || test_run)
             {
                 if (cancel_flag) return;
-                commands.MakeSepAudioString(paths.InputFile, paths.GetTempAudioDir() + @"audio.wav");
+                commands.MakeSepAudioString(paths.InputFile, paths.GetTempAudioDir() + audio_temp);
                 com1.SetOutputFunc(Video2AudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
             }
@@ -61,6 +62,8 @@ namespace AnimeLoupe2x
             {
                 commands.ci_scale = 1.50f; // 1280x720
                 //commands.ci_scale = 2.00f; // 
+
+                if (scale != 0.0f) commands.ci_scale = scale;
 
                 var delta_list = new List<string>();
                 string[] pre_temp_files = Directory.GetFiles(paths.GetTempImageDir(), "*.png");
@@ -112,7 +115,7 @@ namespace AnimeLoupe2x
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, CompAudioCheckBox) || test_run)
             {
                 if (cancel_flag) return;
-                commands.MakeComAudioString(paths.GetTempVideoDir() + "video.avi", paths.GetTempAudioDir() + @"audio.wav", paths.OutputFile);
+                commands.MakeComAudioString(paths.GetTempVideoDir() + "video.avi", paths.GetTempAudioDir() + audio_temp, paths.OutputFile);
                 com1.SetOutputFunc(CompAudioOutput);
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
             }
@@ -214,8 +217,11 @@ namespace AnimeLoupe2x
 
             cancel_flag = false;
 
+            float scale_tmp = 0.0f;
+            bool scale_result = float.TryParse(ScaleTextbox.Text, out scale_tmp);
+
             Task task = Task.Run(() => {
-                ConvertTaskMethod();
+                ConvertTaskMethod(false, scale_tmp);
             });
         }
 
