@@ -210,7 +210,7 @@ namespace AnimeLoupe2x
 
         void event_DataReceived2(TextBox text_box, string data)
         {
-            text_box.AppendText(data);
+            text_box.AppendText(data+ "\n");
         }
 
         /* ボタンUI関連 */

@@ -21,3 +21,4 @@
 - [ ] folder open button
 - [ ] switch convert
 - [ ] temp file name change
+- [ ] log level change
