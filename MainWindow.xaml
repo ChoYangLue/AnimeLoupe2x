@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AnimeLoupe2x"
         mc:Ignorable="d"
-        Title="MainWindow" Height="468" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="MainWindow" Height="653" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <Button x:Name="RunButton" Content="Run" HorizontalAlignment="Left" Margin="362,386,0,0" Click="RunButton_Click" Height="32" VerticalAlignment="Top" Cursor="Hand"/>
         <GroupBox x:Name="ProgressGroupBox" Header="Progress" Margin="10,188,10,0" Height="181" VerticalAlignment="Top">
@@ -30,11 +30,12 @@
                 <Label Content="Input:" HorizontalAlignment="Left" Margin="10,1,0,0" VerticalAlignment="Top"/>
                 <Label Content="Output:" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top"/>
                 <Label Content="Temp:" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="ScaleTextbox" HorizontalAlignment="Left" Margin="674,0,0,0" Text="Scale ex) 1.50" TextWrapping="Wrap" VerticalAlignment="Center" Width="78"/>
+                <TextBox x:Name="ScaleTextbox" Margin="715,0,10,0" Text="1.50" TextWrapping="Wrap" VerticalAlignment="Center"/>
             </Grid>
         </GroupBox>
         <Button x:Name="TestRunButton" Content="TestRun" HorizontalAlignment="Left" Margin="456,386,0,0" VerticalAlignment="Top" Click="TestRunButton_Click"/>
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="572,386,0,0" VerticalAlignment="Top" Cursor="Hand" Click="CancelButton_Click"/>
+        <TextBox x:Name="OutputLogTextbox" Margin="10,447,10,10" Text="Log" TextWrapping="Wrap" AcceptsReturn="True"/>
 
     </Grid>
 </Window>

@@ -23,13 +23,16 @@ namespace AnimeLoupe2x
         public delegate bool GetCheckBoxIsCheckedEventHandler(CheckBox check_box);
         public event GetCheckBoxIsCheckedEventHandler GetCheckBoxIsCheckedContentEvent = null;
 
+        public delegate void UpdateTextBoxEventHandler(TextBox text_box, string data);
+        public event UpdateTextBoxEventHandler UpdateTextBoxContentEvent = null;
+
         Commander commands;
         PathManager paths;
         bool cancel_flag;
 
         void ConvertTaskMethod(bool test_run = false, float scale = 0.0f)
         {
-            Console.WriteLine("すごく重い処理その1(´・ω・｀)はじまり");
+            this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, "処理(´・ω・｀)はじまり");
             string audio_temp = @"audio.aac";
 
             var com1 = new LoadExecJob();
@@ -120,7 +123,7 @@ namespace AnimeLoupe2x
                 com1.RunFFmpegAndJoin(commands.command, commands.option);
             }
 
-            Console.WriteLine("すごく重い処理その1(´・ω・｀)おわり");
+            this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, "処理(´・ω・｀)おわり");
         }
 
         /* 各命令のコンソール出力 */
@@ -141,6 +144,7 @@ namespace AnimeLoupe2x
             }
 
             //this.Dispatcher.Invoke(UpdateLabelContentEvent, Video2ImageLabel, out_txt);
+            this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, out_txt);
         }
 
         void Video2AudioOutput(string out_txt)
@@ -202,6 +206,11 @@ namespace AnimeLoupe2x
         bool event_CheckBoxIsChecked(CheckBox check_box)
         {
             return (bool)check_box.IsChecked;
+        }
+
+        void event_DataReceived2(TextBox text_box, string data)
+        {
+            text_box.AppendText(data);
         }
 
         /* ボタンUI関連 */
@@ -267,8 +276,8 @@ namespace AnimeLoupe2x
             cancel_flag = false;
 
             UpdateLabelContentEvent = new UpdateLabelContentEventHandler(event_DataReceived);
-
             GetCheckBoxIsCheckedContentEvent = new GetCheckBoxIsCheckedEventHandler(event_CheckBoxIsChecked);
+            UpdateTextBoxContentEvent = new UpdateTextBoxEventHandler(event_DataReceived2);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
