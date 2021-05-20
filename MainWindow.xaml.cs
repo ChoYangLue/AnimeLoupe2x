@@ -259,6 +259,7 @@ namespace AnimeLoupe2x
             ConvertCheckBox.IsChecked = Properties.Settings.Default.ConvertCheckBoxSetting;
             Image2VideoCheckBox.IsChecked = Properties.Settings.Default.Image2VideoCheckBoxSetting;
             CompAudioCheckBox.IsChecked = Properties.Settings.Default.CompAudioCheckBoxSetting;
+            ScaleTextbox.Text = Properties.Settings.Default.WaifuScaleSetting.ToString();
 
             paths = new PathManager();
             commands = new Commander(paths.GetFFmpegPath(), paths.GetWaifu2xPath(), paths.GetAnime4KPath() );
@@ -280,7 +281,8 @@ namespace AnimeLoupe2x
             Properties.Settings.Default.Video2AudioCheckBoxSetting = (bool)Video2AudioCheckBox.IsChecked;
             Properties.Settings.Default.ConvertCheckBoxSetting = (bool)ConvertCheckBox.IsChecked;
             Properties.Settings.Default.Image2VideoCheckBoxSetting = (bool)Image2VideoCheckBox.IsChecked;
-            Properties.Settings.Default.CompAudioCheckBoxSetting = (bool)CompAudioCheckBox.IsChecked; 
+            Properties.Settings.Default.CompAudioCheckBoxSetting = (bool)CompAudioCheckBox.IsChecked;
+            Properties.Settings.Default.WaifuScaleSetting = float.Parse(ScaleTextbox.Text);
 
             Properties.Settings.Default.Save();
         }

@@ -18,6 +18,6 @@
 # ActionItem
 - [x] convert with ffmpeg
 - [x] convert test function
-- [] folder open button
-- [] switch convert
-- [] temp file name change
+- [ ] folder open button
+- [ ] switch convert
+- [ ] temp file name change
