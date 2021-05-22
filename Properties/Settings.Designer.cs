@@ -130,5 +130,17 @@ namespace AnimeLoupe2x.Properties {
                 this["WaifuScaleSetting"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ConvertSwitcherSetting {
+            get {
+                return ((int)(this["ConvertSwitcherSetting"]));
+            }
+            set {
+                this["ConvertSwitcherSetting"] = value;
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace AnimeLoupe2x
         PathManager paths;
         bool cancel_flag;
 
-        void ConvertTaskMethod(bool test_run = false, float scale = 0.0f)
+        void ConvertTaskMethod(bool test_run = false, float scale = 0.0f, int select_index = 0)
         {
             this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, "処理(´・ω・｀)はじまり");
             string audio_temp = @"audio.aac";
@@ -88,9 +88,18 @@ namespace AnimeLoupe2x
                 foreach (string img in delta_list)
                 {
                     string pre_image = Path.GetFileName(img);
-                    commands.MakeAnime4KString(paths.GetTempImageDir() + pre_image, paths.GetTempConvertDir() + pre_image);
+
+                    if (select_index == 0)
+                    {
+                        commands.MakeWaifu2xString(paths.GetTempImageDir() + pre_image, paths.GetTempConvertDir() + pre_image);
+                    }
+                    else if (select_index == 1)
+                    {
+                        commands.MakeAnime4KString(paths.GetTempImageDir() + pre_image, paths.GetTempConvertDir() + pre_image);
+                    }
                     //commands.MakeWaifu2xString();
-                    //Console.WriteLine(commands.option);
+                    //commands.MakeAnime4KString(paths.GetTempImageDir() + pre_image, paths.GetTempConvertDir() + pre_image);
+
                     com1.SetOutputFunc(ConvertOutput);
                     com1.Run(commands.command, commands.option, false);
                     com1.Join();
@@ -171,8 +180,7 @@ namespace AnimeLoupe2x
 
         void ConvertOutput(string out_txt)
         {
-            //Console.WriteLine(out_txt);
-            //this.Dispatcher.Invoke(UpdateLabelContentEvent, ConvertLabel, out_txt);
+            //this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, out_txt);
         }
 
         void Image2VideoOutput(string out_txt)
@@ -231,7 +239,7 @@ namespace AnimeLoupe2x
             bool scale_result = float.TryParse(ScaleTextbox.Text, out scale_tmp);
 
             Task task = Task.Run(() => {
-                ConvertTaskMethod(false, scale_tmp);
+                ConvertTaskMethod(false, scale_tmp, ConvertComboBox.SelectedIndex);
             });
         }
 
@@ -270,6 +278,7 @@ namespace AnimeLoupe2x
             Image2VideoCheckBox.IsChecked = Properties.Settings.Default.Image2VideoCheckBoxSetting;
             CompAudioCheckBox.IsChecked = Properties.Settings.Default.CompAudioCheckBoxSetting;
             ScaleTextbox.Text = Properties.Settings.Default.WaifuScaleSetting.ToString();
+            ConvertComboBox.SelectedIndex = Properties.Settings.Default.ConvertSwitcherSetting;
 
             paths = new PathManager();
             commands = new Commander(paths.GetFFmpegPath(), paths.GetWaifu2xPath(), paths.GetAnime4KPath() );
@@ -293,6 +302,7 @@ namespace AnimeLoupe2x
             Properties.Settings.Default.Image2VideoCheckBoxSetting = (bool)Image2VideoCheckBox.IsChecked;
             Properties.Settings.Default.CompAudioCheckBoxSetting = (bool)CompAudioCheckBox.IsChecked;
             Properties.Settings.Default.WaifuScaleSetting = float.Parse(ScaleTextbox.Text);
+            Properties.Settings.Default.ConvertSwitcherSetting = ConvertComboBox.SelectedIndex;
 
             Properties.Settings.Default.Save();
         }

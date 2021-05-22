@@ -19,6 +19,6 @@
 - [x] convert with ffmpeg
 - [x] convert test function
 - [ ] folder open button
-- [ ] switch convert
+- [x] switch convert
 - [ ] temp file name change
 - [ ] log level change
