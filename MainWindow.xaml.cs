@@ -149,7 +149,7 @@ namespace AnimeLoupe2x
 
         void Video2AudioOutput(string out_txt)
         {
-            Console.WriteLine(out_txt);
+            this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, out_txt);
 
             if (out_txt.IndexOf("time=") > 0)
             {
@@ -160,7 +160,7 @@ namespace AnimeLoupe2x
 
         void Video2ImageOutput(string out_txt)
         {
-            Console.WriteLine(out_txt);
+            this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, out_txt);
 
             if (out_txt.IndexOf("time=") > 0)
             {
@@ -177,7 +177,7 @@ namespace AnimeLoupe2x
 
         void Image2VideoOutput(string out_txt)
         {
-            Console.WriteLine(out_txt);
+            this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, out_txt);
 
             if (out_txt.IndexOf("time=") > 0)
             {
@@ -188,7 +188,7 @@ namespace AnimeLoupe2x
 
         void CompAudioOutput(string out_txt)
         {
-            Console.WriteLine(out_txt);
+            this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, out_txt);
 
             if (out_txt.IndexOf("time=") > 0)
             {
@@ -211,6 +211,7 @@ namespace AnimeLoupe2x
         void event_DataReceived2(TextBox text_box, string data)
         {
             text_box.AppendText(data+ "\n");
+            text_box.ScrollToEnd();
         }
 
         /* ボタンUI関連 */

@@ -35,7 +35,7 @@
         </GroupBox>
         <Button x:Name="TestRunButton" Content="TestRun" HorizontalAlignment="Left" Margin="456,386,0,0" VerticalAlignment="Top" Click="TestRunButton_Click"/>
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="572,386,0,0" VerticalAlignment="Top" Cursor="Hand" Click="CancelButton_Click"/>
-        <TextBox x:Name="OutputLogTextbox" Margin="10,447,10,10" TextWrapping="Wrap" AcceptsReturn="True"/>
+        <TextBox x:Name="OutputLogTextbox" Margin="10,447,10,10" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
 
     </Grid>
 </Window>
