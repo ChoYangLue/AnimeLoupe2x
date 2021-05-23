@@ -237,9 +237,10 @@ namespace AnimeLoupe2x
 
             float scale_tmp = 0.0f;
             bool scale_result = float.TryParse(ScaleTextbox.Text, out scale_tmp);
+            int convert_index = ConvertComboBox.SelectedIndex;
 
             Task task = Task.Run(() => {
-                ConvertTaskMethod(false, scale_tmp, ConvertComboBox.SelectedIndex);
+                ConvertTaskMethod(false, scale_tmp, convert_index);
             });
         }
 
