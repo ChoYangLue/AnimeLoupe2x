@@ -117,6 +117,11 @@ namespace AnimeLoupe2x
             if ((bool)this.Dispatcher.Invoke(GetCheckBoxIsCheckedContentEvent, Image2VideoCheckBox) || test_run)
             {
                 if (cancel_flag) return;
+                if (File.Exists(paths.GetTempVideoDir() + "video.avi"))
+                {
+                    File.Delete(paths.GetTempVideoDir() + "video.avi");
+                    this.Dispatcher.Invoke(UpdateTextBoxContentEvent, OutputLogTextbox, "TEMPのビデオファイルを削除しました");
+                }
                 commands.MakeImage2VideoString(paths.GetTempConvertDir() + "image_%08d.png", paths.GetTempVideoDir() + "video.avi");
                 if (test_run) commands.MakeImage2VideoString(paths.GetTempImageDir() + "image_%08d.png", paths.GetTempVideoDir() + "video.avi");
                 com1.SetOutputFunc(Image2VideoOutput);
